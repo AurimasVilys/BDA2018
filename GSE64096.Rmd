@@ -1,6 +1,6 @@
 ---
 title: "GSE64096"
-author: "Aurimas Vilys, Karolina Butrimaitė, Dovilė Patiejūnaitė, Paulius Matijošaitis"
+author: "Aurimas Vilys, Karolina Butrimaitė, Dovilė Patiejūnaitė, Paulius Matijošaitis, Leonas Rėčkus"
 date: '2018-05-27'
 output: html_document
 ---
@@ -15,10 +15,29 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
+```{r}
+library(GEOquery)
+library(minfi)
+library(readr)
+getGEOSuppFiles("GSE64096")
+untar("GSE64096/GSE64096_RAW.tar")
+# idatFiles <- list.files("GSE64096/idat", pattern = "idat.gz$", full = TRUE)
+# sapply(idatFiles, gunzip, overwrite = TRUE)
+# rgSet <- read.metharray.exp("GSE64096/idat")
+# sampleNames(rgSet)
+# geoMat <- getGEO("GSE64096")
+# pD.all <- pData(geoMat[[1]])
+# pD <- pD.all[c("title", "geo_accession", "characteristics_ch1", "characteristics_ch1.1")]
+# head(pD)
+GSE64096_unmethylated_methylated <- read_delim("GSE64096/GSE64096_unmethylated_methylated.txt", 
++     "\t", escape_double = FALSE, trim_ws = TRUE)
 ```
 
+
+Pirmas T testas - lyginama A90% nemetilinta su A90% metilintu meginiu
+```{r}
+with(GSE64096_unmethylated_methylated, (t.test(GSE64096_unmethylated_methylated$`A90% unmethylated`, GSE64096_unmethylated_methylated$`A90% methylated`, conf.level = 0.95, alternative='two.sided', paired=TRUE)))
+```
 ## Including Plots
 
 You can also embed plots, for example:
